@@ -24,6 +24,10 @@ const DEFAULT_API_URL = "http://localhost:7007";
 const threeIdConnect = new ThreeIdConnect();
 const ceramic = new Ceramic(DEFAULT_API_URL);
 
+import createPersistedState from 'vuex-persistedstate'
+import * as Cookies from 'js-cookie'
+
+
 export default new Vuex.Store({
   state: {
     authenticated: false,
@@ -33,29 +37,92 @@ export default new Vuex.Store({
     recordsList: [],
     did: "",
     ethaddress: "",
+    currentRecord: {}
   },
   getters: {
     records: state => state.recordsList.records
   },
   mutations: {
-    auth(state, info) {
-      state.ethaddress = info.ethaddress;
-      state.ipfs = info.ipfs;
-      state.idx = info.idx;
-      state.did = info.did;
-      state.recordsList = info.recordList.records;
-      state.authenticated = info.idx.authenticated;
+    initialiseStore(state) {
+      if (localStorage.getItem('ethaddress')!= null) {
+        state.ethaddress = localStorage.getItem('ethaddress');
+      }
+
+      if (localStorage.getItem('idx')!= null) {
+        state.idx = localStorage.getItem('idx');
+      }
+
+      if (localStorage.getItem('ceramic')!= null) {
+        state.ceramic = localStorage.getItem('ceramic');
+      }
+
+      if (localStorage.getItem('did')!= null) {
+        state.did = localStorage.getItem('did');
+      }
+
+      if (localStorage.getItem('recordsList')!= null) {
+        state.recordsList = JSON.parse(localStorage.getItem('recordsList'));
+      }
+
+      if (localStorage.getItem('authenticated')) {
+        state.authenticated = true;
+      }
+
+      if (localStorage.getItem('currentRecord')!= null) {
+        state.currentRecord = JSON.parse(localStorage.getItem('currentRecord'));
+
+      }
+
+    },
+    auth(state, payload) {
+      state.ethaddress = payload.ethaddress;
+      localStorage.setItem('ethaddress', payload.ethaddress);
+
+      state.idx = payload.idx;
+      localStorage.setItem('idx', payload.idx);
+
+      state.did = payload.did;
+      localStorage.setItem('did', payload.did);
+
+      state.recordsList = payload.recordList.records;
+      localStorage.setItem('recordsList', JSON.stringify(payload.recordList.records));
+
+      state.authenticated = payload.idx.authenticated;
+      localStorage.setItem('authenticated', true);
+
       console.log('mutation executed and state stored');
     },
-    newRecord(state, info){
-      state.recordsList = info.record;
+    newRecord(state, payload){
+      state.recordsList = payload.recordList.records;
+      localStorage.setItem('recordsList', JSON.stringify(payload.recordList.records));
+    },
+    currentRecord(state, payload){
+      state.currentRecord = payload.currentRecord;
+      console.log(payload.currentRecord)
+      localStorage.setItem('currentRecord', JSON.stringify(payload.currentRecord));
+
+    },
+    logoutTriggered(state){
+      state.ethaddress = "";
+      localStorage.setItem('ethaddress', "");
+
+      state.idx = {};
+      localStorage.setItem('idx', {});
+
+      state.did = "";
+      localStorage.setItem('did', "");
+
+      state.recordsList = [];
+      localStorage.setItem('recordsList',state.recordsList);
+
+      state.authenticated = false;
+      localStorage.setItem('authenticated', false);
+
+      console.log('User Logged out Succesfully');
     }
   },
   actions: {
     async ceramicAuth({commit}){
-      //create a new instance of ipfs and insert the dag jose formats
-      const ipfs = await Ipfs.create({ ipld: { formats: [dagJoseFormat] } })  
-      
       const ethProvider = await web3Modal.connect();
       const addresses = await ethProvider.request({ method: "eth_accounts" });
       console.log("Got the ethaddress");
@@ -78,12 +145,12 @@ export default new Vuex.Store({
         console.dir(recordList);
         let payload = {
           ethaddress,
-          ipfs, 
           idx,
           recordList,
-          did : ceramic.did.id
+          did : ceramic.did.id,
+          ceramic
         }
-        setTimeout(() => {
+        await setTimeout(() => {
           commit('auth', payload)
         }, 4000)
 
@@ -93,44 +160,87 @@ export default new Vuex.Store({
       }
     },
 
-    async decryptHR({state}, payload){
-      const jwe = ( await state.ipfs.dag.get(state.recordList[payload].id) ).value
+    async decryptHR({commit}, payload){
+
+      const ethProvider = await web3Modal.connect();
+      const addresses = await ethProvider.request({ method: "eth_accounts" });
+      console.log("Got the ethaddress");
+      
+      const authProvider = new EthereumAuthProvider(ethProvider, addresses[0]);
+      await threeIdConnect.connect(authProvider);
+      console.log("3id connect func executed");
+      const provider = await threeIdConnect.getDidProvider();
+      
+      await ceramic.setDIDProvider(provider);
+      console.log("Ceramic DID Provider set");
+
+      console.log('ID '+payload.id)
+      //create a new instance of ipfs and insert the dag jose formats
+      const ipfs = await Ipfs.create({ ipld: { formats: [dagJoseFormat] } })  
+
+      const jwe = ( await ipfs.dag.get(payload.id) ).value
+      console.log(jwe)
       const data = await ceramic.did.decryptDagJWE(jwe)
       console.log(data)
-      return data
+      setTimeout(() => {
+        commit('currentRecord', {currentRecord: data})
+      }, 2000)
     },
 
-    async encryptStore({state, commit}, payload){
+    async encryptStore({commit}, payload){
+      const ethProvider = await web3Modal.connect();
+      const addresses = await ethProvider.request({ method: "eth_accounts" });
+      console.log("Got the ethaddress");
+      
+      const authProvider = new EthereumAuthProvider(ethProvider, addresses[0]);
+      await threeIdConnect.connect(authProvider);
+      console.log("3id connect func executed");
+      const provider = await threeIdConnect.getDidProvider();
+      
+      await ceramic.setDIDProvider(provider);
+      console.log("Ceramic DID Provider set");
+      const idx = new IDX({ceramic, aliases: definitions});
+
+      //create a new instance of ipfs and insert the dag jose formats
+      const ipfs = await Ipfs.create({ ipld: { formats: [dagJoseFormat] } })  
       const recipients = [ceramic.did.id]
-      const jwe = await ceramic.did.createDagJWE(payload, recipients)
+      const jwe = await ceramic.did.createDagJWE(payload.record, recipients)
       console.log(jwe)
-      const cid = await state.ipfs.dag.put(jwe, { format: 'dag-jose', hashAlg: 'sha2-256' });
+      const cid = await ipfs.dag.put(jwe, { format: 'dag-jose', hashAlg: 'sha2-256' });
       console.log('CID')
       const DocID = cid.toString()
       console.log(DocID)
 
-      const recordList = await state.idx.get('healthRecord')
+      const recordList = await idx.get('healthRecord')
       console.log("Health Records List");
       console.dir(recordList);
-
+      if(recordList.records.length >= 1){
+        const record = await idx.set('healthRecord', {
+          records: [{id: DocID, title:payload.record.title }, ...recordList.records ]
+        })
+        console.log(record)
+      } else{
+        const record = await idx.set('healthRecord', {
+          records: [{id: DocID, title:payload.record.title } ]
+        })
+        console.log(record)
+      }
       //update the index doc with the addition of the newly encrypted IPLD at the top
-      const record = await state.idx.set('healthRecord', {
-        records: [{id: DocID, title: "Health Record"}, ...recordList.records ]
-      })         
-      console.log(record)
-      let payload2 = {record}
+      const recordList2 = await idx.get('healthRecord')
 
       setTimeout(() => {
-        commit('newRecord', payload2)
+        commit('newRecord', {recordList: recordList2})
       }, 2000)
 
     },
 
     async shareDoc({ state}, payload){
+      //create a new instance of ipfs and insert the dag jose formats
+      const ipfs = await Ipfs.create({ ipld: { formats: [dagJoseFormat] } })  
       const recipients = [payload.did]
       const jwe = await ceramic.did.createDagJWE(payload.content, recipients)
       console.log(jwe)
-      const cid = await state.ipfs.dag.put(jwe, { format: 'dag-jose', hashAlg: 'sha2-256' });
+      const cid = await ipfs.dag.put(jwe, { format: 'dag-jose', hashAlg: 'sha2-256' });
       console.log('CID')
       const DocID = cid.toString()
       console.log(DocID)
@@ -144,9 +254,21 @@ export default new Vuex.Store({
         records: [{id: DocID, title: "Health Record"}, ...recordList.records ]
       })         
       console.log(record)
+    },
+    
+    async logoutTriggered({commit}){
+      setTimeout(() => {
+        commit('logoutTriggered')
+      }, 1000)
     }
 
   },
   modules: {
-  }
+  },
+  plugins: [
+    createPersistedState({
+      getState: (key) => Cookies.getJSON(key),
+      setState: (key, state) => Cookies.set(key, state, { expires: 3, secure: true })
+    })  
+  ]
 })

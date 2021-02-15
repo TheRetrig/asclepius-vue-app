@@ -1,11 +1,19 @@
 <template>
   <div class="home">
+    <div class="center" style="margin-top: 250px">
+      <img
+      alt="Vue logo"
+      src="../../public/Asset1@3x.png"
+      width="250px"
+      style="margin-bottom:25px"
+    />
+    </div>
     <div class="center grid">
       <vs-row>
       <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="5">
       </vs-col>
       <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="1" class="mb-3">
-      <div class="div" style="margin: 300px 100px">
+      <div class="div" style="margin: 100px 100px">
         <vs-button
           size="xl"
           @click="auth"
@@ -37,14 +45,18 @@ export default {
       const loading = this.$vs.loading();
       setTimeout(() => {
         loading.close();
-      }, 8000);
+      }, 11000);
     },
     async auth() {
-      this.openLoading();
+      const loading = this.$vs.loading();
       let boolean = await this.$store.dispatch("ceramicAuth");
       if(boolean){
         let route = this.$router.resolve({path: '/'});
-        window.open(route.href, "_self");
+         setTimeout(() => {
+          loading.close();
+          window.open(route.href, "_self")
+        }, 9500)
+        
       }
     }
     

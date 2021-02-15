@@ -5,33 +5,33 @@
     </div>
     <h1 class="mt-3">New Record </h1>
     
-    <form id="waterform" method="post">
+    <div id="waterform">
       <div class="formgroup" id="message-form">
         <label for="title">Title of the Record</label>
-        <input type="text" name="" id="title">
+        <input type="text" name="" id="title" v-model="record.title" placeholder="Title">
       </div>
       <div class="formgroup" id="message-form">
         <label for="doctor">Name of The Doctor</label>
-        <input type="text" name="" id="doctor">
+        <input type="text" name="" id="doctor" v-model="record.doctor" placeholder="Name of the Doctor">
       </div>
       <div class="formgroup" id="message-form">
         <label for="D_date">Date of Diagnosis</label>
-        <input type="date" name="" id="D_date">
+        <input type="date" name="" id="D_date" v-model="record.dateDiagnosis">
       </div>
       <div class="formgroup" id="message-form">
         <label for="message">Diagnosis</label>
-        <textarea id="message" name="message" placeholder="Describe in detail...."></textarea>
+        <textarea id="message" name="message" v-model="record.diagnosis" placeholder="Describe in detail...."></textarea>
       </div>
       <div class="formgroup" id="message-form">
         <label for="message">Medicines Prescribed</label>
-        <textarea id="message" name="message" placeholder="List all with dosage...."></textarea>
+        <textarea id="message" name="message" v-model="record.medicines" placeholder="List all with dosage...."></textarea>
       </div>
       <div class="formgroup" id="message-form" style="padding-left: 200px; margin-top:15px;">
-        <vs-button size="large">
+        <vs-button size="large" @click="newRecord">
         Submit
       </vs-button>
       </div>
-    </form>
+    </div>
     
     
   </div>
@@ -54,7 +54,7 @@ h1{
 	position: relative;
 	
 }
-form{
+div#waterform{
 	margin: 0 auto;
 	width: 500px;
 	padding-top: 40px;
@@ -126,8 +126,35 @@ export default {
       bio: "",
       profile: {},
       search: '',
+      record: {
+        date: new Date().toISOString(),
+        title: "",
+        doctor: "",
+        dateDiagnosis: "", 
+        medicines: "",
+        diagnosis: "",
+      }
       
     };
+  },
+  methods: {
+    openLoading() {
+      const loading = this.$vs.loading();
+      setTimeout(() => {
+        loading.close();
+      }, 11000);
+    },
+    async newRecord(){
+      const loading = this.$vs.loading();
+      let record2 = this.record;
+      console.log(record2);
+      await this.$store.dispatch("encryptStore", {record: record2});
+      let route = this.$router.resolve({path: '/'});
+      setTimeout(() => {
+        loading.close();
+        window.open(route.href, "_self");
+      }, 3000);
+    }
   }
 };
 </script>

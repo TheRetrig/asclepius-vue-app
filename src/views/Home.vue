@@ -15,19 +15,19 @@
     <div class="center grid">
       <vs-row>
       <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="3">
-    {{this.$store.did}}
       </vs-col>
       <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="6" class="mb-3">
+        <h4>Your DID : {{did}}</h4>
        <vs-table>
         <template #header>
           <vs-input v-model="search" border placeholder="Search" />
         </template>
         <template #thead>
           <vs-tr  >
-            <vs-th sort @click="users = $vs.sortData($event ,users, 'id')">
+            <vs-th sort @click="recordsList = $vs.sortData($event ,recordsList, 'id')">
               ID
             </vs-th>
-            <vs-th sort @click="users = $vs.sortData($event ,users, 'name')">
+            <vs-th sort @click="recordsList = $vs.sortData($event ,recordsList, 'title')">
               Title
             </vs-th>
             <vs-th >
@@ -38,14 +38,14 @@
         <template #tbody>
           <vs-tr
             :key="i"
-            v-for="(tr, i) in $vs.getSearch(users, search)"
+            v-for="(tr, i) in $vs.getSearch(recordsList, search)"
             :data="tr"
           >
             <vs-td>
               {{ tr.id }}
             </vs-td>
             <vs-td>
-            {{ tr.name }}
+            {{ tr.title }}
             </vs-td>
             <vs-td>
                <vs-button gradient success  @click="myFunc(tr.id )" >
@@ -73,6 +73,7 @@
 <script>
 // @ is an alias to /src
 import AppHeader from "../layout/AppHeader.vue";
+import { mapState } from 'vuex'
 
 export default {
   name: "Home",
@@ -189,24 +190,18 @@ export default {
       const loading = this.$vs.loading();
       this.$store.dispatch("fetchSky", { seed: this.seed, loading });
     },
-    myFunc(id){
-      let route = this.$router.resolve({path: '/content/' + id});
-      window.open(route.href, "_self");
+    async myFunc(id){
+      await this.$store.dispatch("decryptHR", {id});
+        let route = this.$router.resolve({path: '/content/' + id});
+      setTimeout(() => {
+        window.open(route.href, "_self");
+      }, 10000);
     }
   },
-  created:  () => {
-   
+  created: async () => {
   },
   computed: {
-    getAuth() {
-      return this.$store.getters.authstatus;
-    },
-    getProfile() {
-      return this.$store.getters.profile;
-    },
-    getPost() {
-      return this.$store.getters.post;
-    }
+     ...mapState(['recordsList', 'did', 'ethaddress'])
   },
 };
 </script>

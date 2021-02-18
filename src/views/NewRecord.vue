@@ -1,44 +1,59 @@
 <template>
-  <div class="home" id="form">
+  <div class="home" id="form" >
     <div class="mb-3">
       <app-header> </app-header>
     </div>
-    <h1 class="mt-3">New Record </h1>
-    
-    <div id="waterform">
-      <div class="formgroup" id="message-form">
-        <label for="title">Title of the Record</label>
-        <input type="text" name="" id="title" v-model="record.title" placeholder="Title">
-      </div>
-      <div class="formgroup" id="message-form">
-        <label for="doctor">Name of The Doctor</label>
-        <input type="text" name="" id="doctor" v-model="record.doctor" placeholder="Name of the Doctor">
-      </div>
-      <div class="formgroup" id="message-form">
-        <label for="D_date">Date of Diagnosis</label>
-        <input type="date" name="" id="D_date" v-model="record.dateDiagnosis">
-      </div>
-      <div class="formgroup" id="message-form">
-        <label for="message">Diagnosis</label>
-        <textarea id="message" name="message" v-model="record.diagnosis" placeholder="Describe in detail...."></textarea>
-      </div>
-      <div class="formgroup" id="message-form">
-        <label for="message">Medicines Prescribed</label>
-        <textarea id="message" name="message" v-model="record.medicines" placeholder="List all with dosage...."></textarea>
-      </div>
-      <div class="formgroup" id="message-form" style="padding-left: 200px; margin-top:15px;">
-        <vs-button size="large" @click="newRecord">
-        Submit
-      </vs-button>
-      </div>
+    <mdb-card class="mdb-card" :style="{'backgroundImage': 'url(https://images.unsplash.com/photo-1511468102400-883d6ea28755?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80)'}">
+    <mdb-row>
+    <mdb-col md="6" class="desc" >
+      <div class="align-baseline">Enter Details for the record</div>
+      <p class="text-justify ">Ambitioni dedisse scripsisse iudicaretur. Cras mattis iudicium purus sit amet
+    fermentum. Donec sed odio operae,
+    eu vulputate felis rhoncus. Praeterea iter est quasdam res quas ex communi. At nos hinc posthac, sitientis
+    piros Afros. Petierunt uti sibi concilium totius Galliae in diem certam indicere. Cras mattis iudicium
+    purus sit amet fermentum.</p>
+    </mdb-col>
+    <mdb-col md="6">
+      <div class="form-dark">
+    <mdb-row>
+      <mdb-col md="5">
+        <mdb-card class="card-image d-flex justify-content-center" :style="{'backgroundImage': 'url(https://mdbootstrap.com/img/Photos/Others/pricing-table7.jpg)', 'width': '28rem'}">
+          <div class="text-white rgba-stylish-strong py-5 px-5 z-depth-4">
+            <div class="text-center">
+              <h3 class="white-text mb-5 mt-4 font-weight-bold"><strong>SIGN</strong> <a class="green-text font-weight-bold"><strong> UP</strong></a></h3>
+            </div>
+            <mdb-input label="Your email" type="text"/>
+            <mdb-input label="Your password" type="password"/>
+            <mdb-input class="my-5" type="checkbox" id="defaultCheck17" label="Accept the Terms and Conditions" />
+            <mdb-row class="d-flex align-items-center mb-4">
+              <div class="text-center mb-3 col-md-12">
+                <mdb-btn color="success" rounded type="button" class="btn-block z-depth-1">Sign in</mdb-btn>
+              </div>
+            </mdb-row>
+            <mdb-col md="12">
+              <p class="font-small white-text d-flex justify-content-end">Have an account? <a href="#" class="green-text ml-1 font-weight-bold"> Log in</a></p>
+            </mdb-col>
+          </div>
+        </mdb-card>
+      </mdb-col>
+    </mdb-row>
+  </div>
+
+    </mdb-col>
+    </mdb-row>
+    </mdb-card>
     </div>
     
-    
-  </div>
 </template>
 
-<style scoped>
 
+<style scoped>
+.mdb-card{
+  padding: 2rem;
+}
+.desc{
+  padding: 2rem;
+}
 h1{
 	font-weight: normal;
 	font-size: 4em;
@@ -47,7 +62,9 @@ h1{
 	width: 500px;
 	text-align: center;
 }
-
+.home{
+  background: 'url(https://mdbootstrap.com/img/Photos/Others/pricing-table7.jpg)'
+}
 #form{
 	height: 100%;	
 	overflow: hidden;
@@ -103,17 +120,84 @@ label{
 	width: 566px;
 	padding-top: 2px;
 }
+.form-dark .font-small {
+    font-size: 0.8rem; }
 
+  .form-dark [type="radio"] + label,
+  .form-dark [type="checkbox"] + label {
+    font-size: 0.8rem; }
+
+  .form-dark [type="checkbox"] + label:before {
+    top: 2px;
+    width: 15px;
+    height: 15px; }
+
+  .form-dark .md-form label {
+    color: #fff; }
+
+  .form-dark input[type=text]:focus:not([readonly]) {
+    border-bottom: 1px solid #00C851;
+    -webkit-box-shadow: 0 1px 0 0 #00C851;
+    box-shadow: 0 1px 0 0 #00C851; }
+
+  .form-dark input[type=text]:focus:not([readonly]) + label {
+    color: #fff; }
+
+  .form-dark input[type=password]:focus:not([readonly]) {
+    border-bottom: 1px solid #00C851;
+    -webkit-box-shadow: 0 1px 0 0 #00C851;
+    box-shadow: 0 1px 0 0 #00C851; }
+
+  .form-dark input[type=password]:focus:not([readonly]) + label {
+   color: #fff; }
+
+  .form-dark input[type="checkbox"] + label:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 17px;
+    height: 17px;
+    z-index: 0;
+    border: 1.5px solid #fff;
+    border-radius: 1px;
+    margin-top: 2px;
+    -webkit-transition: 0.2s;
+    transition: 0.2s; }
+
+  .form-dark input[type="checkbox"]:checked + label:before {
+    top: -4px;
+    left: -3px;
+    width: 12px;
+    height: 22px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: transparent #00c851 #00c851 transparent;
+    -webkit-transform: rotate(40deg);
+    -ms-transform: rotate(40deg);
+    transform: rotate(40deg);
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-origin: 100% 100%;
+    -ms-transform-origin: 100% 100%;
+    transform-origin: 100% 100%; }
 </style>
 
 <script>
 // @ is an alias to /src
 import AppHeader from "../layout/AppHeader.vue";
+  import { mdbRow, mdbCol, mdbCard,  mdbInput, mdbBtn } from 'mdbvue';
 
-export default {
+  export default {
   name: "NewRecord",
   components: {
     AppHeader,
+    mdbRow,
+      mdbCol,
+      mdbCard,
+      //mdbCardBody,
+      mdbInput,
+      mdbBtn,
+     // mdbIcon
   },
   data() {
     return {

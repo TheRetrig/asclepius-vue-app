@@ -48,12 +48,12 @@ export default {
       }, 11000);
     },
     async auth() {
-      const loading = this.$vs.loading();
+      //const vs = this.$vs;
       let boolean = await this.$store.dispatch("ceramicAuth");
       if(boolean){
         let route = this.$router.resolve({path: '/'});
          setTimeout(() => {
-          loading.close();
+         // loading.close();
           window.open(route.href, "_self")
         }, 9500)
         

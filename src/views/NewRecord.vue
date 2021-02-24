@@ -145,13 +145,11 @@ export default {
       }, 11000);
     },
     async newRecord(){
-      const loading = this.$vs.loading();
       let record2 = this.record;
       console.log(record2);
       await this.$store.dispatch("encryptStore", {record: record2});
       let route = this.$router.resolve({path: '/'});
       setTimeout(() => {
-        loading.close();
         window.open(route.href, "_self");
       }, 3000);
     }

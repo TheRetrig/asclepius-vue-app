@@ -214,12 +214,12 @@ export default new Vuex.Store({
       const recordList = await idx.get('healthRecord')
       console.log("Health Records List");
       console.dir(recordList);
-      if(recordList.records.length >= 1){
+      if(recordList != null ){
         const record = await idx.set('healthRecord', {
           records: [{id: DocID, title:payload.record.title }, ...recordList.records ]
         })
         console.log(record)
-      } else{
+      } else if(recordList == null || recordList.records.length <= 0){
         const record = await idx.set('healthRecord', {
           records: [{id: DocID, title:payload.record.title } ]
         })

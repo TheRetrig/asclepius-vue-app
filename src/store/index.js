@@ -16,6 +16,8 @@ import dagJose from 'dag-jose'
 import multiformats from 'multiformats/basics'
 import legacy from 'multiformats/legacy'
 
+import socket from '../utils/socket'
+
 multiformats.multicodec.add(dagJose)
 const dagJoseFormat = legacy(multiformats, dagJose.name)
 
@@ -122,7 +124,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async ceramicAuth({commit}){
+    async ceramicAuth({commit}, payload){
       const ethProvider = await web3Modal.connect();
       const addresses = await ethProvider.request({ method: "eth_accounts" });
       console.log("Got the ethaddress");
@@ -133,8 +135,22 @@ export default new Vuex.Store({
       console.log("3id connect func executed");
       const provider = await threeIdConnect.getDidProvider();
       
+      const loading = payload.load.loading();
+      
       await ceramic.setDIDProvider(provider);
       console.log("Ceramic DID Provider set");
+
+      socket.auth = { did: ceramic.did.id };
+      socket.connect();
+      console.log('Socket Id ' + socket.id);
+      socket.on("session", ({ sessionID, userID }) => {
+        // attach the session ID to the next reconnection attempts
+        socket.auth = { sessionID };
+        // store it in the localStorage
+        localStorage.setItem("sessionID", sessionID);
+        // save the ID of the user
+        socket.userID = userID;
+      });
       
       const idx = new IDX({ceramic, aliases: definitions});
       console.log("new idx instance created");
@@ -152,10 +168,11 @@ export default new Vuex.Store({
         }
         await setTimeout(() => {
           commit('auth', payload)
+          loading.close();
         }, 4000)
-
         return true;
       } else{
+        loading.close();
         return false;
       }
     },
@@ -182,9 +199,10 @@ export default new Vuex.Store({
       console.log(jwe)
       const data = await ceramic.did.decryptDagJWE(jwe)
       console.log(data)
-      setTimeout(() => {
-        commit('currentRecord', {currentRecord: data})
-      }, 2000)
+      await setTimeout(() => {
+          commit('auth', payload)
+          //loading.close();
+        }, 4000)
     },
 
     async encryptStore({commit}, payload){
@@ -234,26 +252,81 @@ export default new Vuex.Store({
 
     },
 
-    async shareDoc({ state}, payload){
+    async shareDoc({state}, payload){
+      console.log("data from store")
+      console.dir(payload.did)
+      console.dir(payload.record)
+      console.log(state.idx)
+
+      const ethProvider = await web3Modal.connect();
+      const addresses = await ethProvider.request({ method: "eth_accounts" });
+      console.log("Got the ethaddress");
+      
+      const authProvider = new EthereumAuthProvider(ethProvider, addresses[0]);
+      await threeIdConnect.connect(authProvider);
+      console.log("3id connect func executed");
+      const provider = await threeIdConnect.getDidProvider();
+      
+      await ceramic.setDIDProvider(provider);
+      console.log("Ceramic DID Provider set");
+
       //create a new instance of ipfs and insert the dag jose formats
       const ipfs = await Ipfs.create({ ipld: { formats: [dagJoseFormat] } })  
       const recipients = [payload.did]
-      const jwe = await ceramic.did.createDagJWE(payload.content, recipients)
+      const jwe = await ceramic.did.createDagJWE(payload.record, recipients)
       console.log(jwe)
       const cid = await ipfs.dag.put(jwe, { format: 'dag-jose', hashAlg: 'sha2-256' });
       console.log('CID')
       const DocID = cid.toString()
       console.log(DocID)
 
-      const recordList = await state.idx.get('healthRecord')
+      socket.emit("private message", {
+        Pname: payload.name,
+        cid: DocID,
+        to: payload.sessionID,
+      });
+
+    },
+
+    async retireve({commit}, payload){
+      const ethProvider = await web3Modal.connect();
+      const addresses = await ethProvider.request({ method: "eth_accounts" });
+      console.log("Got the ethaddress");
+      
+      const authProvider = new EthereumAuthProvider(ethProvider, addresses[0]);
+      await threeIdConnect.connect(authProvider);
+      console.log("3id connect func executed");
+      const provider = await threeIdConnect.getDidProvider();
+      
+      await ceramic.setDIDProvider(provider);
+      console.log("Ceramic DID Provider set");
+      const idx = new IDX({ceramic, aliases: definitions});
+
+      console.log('CID '+payload.cid)
+
+      const recordList = await idx.get('healthRecord')
       console.log("Health Records List");
       console.dir(recordList);
 
+      if(recordList != null ){
+        const record = await idx.set('healthRecord', {
+          records: [{id: payload.cid, title:payload.name }, ...recordList.records ]
+        })
+        console.log(record)
+      } else if(recordList == null || recordList.records.length <= 0){
+        const record = await idx.set('healthRecord', {
+          records: [{id: payload.cid, title:payload.name } ]
+        })
+        console.log(record)
+      }
       //update the index doc with the addition of the newly encrypted IPLD at the top
-      const record = await state.idx.set('healthRecord', {
-        records: [{id: DocID, title: "Health Record"}, ...recordList.records ]
-      })         
-      console.log(record)
+      const recordList2 = await idx.get('healthRecord')
+
+      setTimeout(() => {
+        commit('newRecord', {recordList: recordList2})
+      }, 2000)
+
+    
     },
     
     async logoutTriggered({commit}){

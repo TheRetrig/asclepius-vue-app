@@ -8,72 +8,82 @@
       alt="Vue logo"
       src="../../public/Asset1@3x.png"
       width="250px"
-      style="margin-bottom:25px"
+      style="margin-bottom: 25px"
     />
-
 
     <div class="center grid">
       <vs-row>
-      <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="3">
-      </vs-col>
-      <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="6" class="mb-3">
-        <h4>Your DID : {{did}}</h4>
-       <vs-table>
-        <template #header>
-          <vs-input v-model="search" border placeholder="Search" />
-        </template>
-        <template #thead>
-          <vs-tr  >
-            <vs-th sort @click="recordsList = $vs.sortData($event ,recordsList, 'id')">
-              ID
-            </vs-th>
-            <vs-th sort @click="recordsList = $vs.sortData($event ,recordsList, 'title')">
-              Title
-            </vs-th>
-            <vs-th >
-              Option
-            </vs-th>
-          </vs-tr>
-        </template>
-        <template #tbody>
-          <vs-tr
-            :key="i"
-            v-for="(tr, i) in $vs.getSearch(recordsList, search)"
-            :data="tr"
-          >
-            <vs-td>
-              {{ tr.id }}
-            </vs-td>
-            <vs-td>
-            {{ tr.title }}
-            </vs-td>
-            <vs-td>
-               <vs-button gradient success  @click="myFunc(tr.id )" >
-                 Open
-               </vs-button>
-            </vs-td>
-          </vs-tr>
-        </template>
-      </vs-table>
-      </vs-col>
-    </vs-row>
+        <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="3">
+        </vs-col>
+        <vs-col
+          vs-type="flex"
+          vs-justify="center"
+          vs-align="center"
+          w="6"
+          class="mb-3"
+        >
+          <h4>Your DID : {{ did }}</h4>
+          <h4>Your Session ID : {{ socketUserID }}</h4>
+          <vs-table>
+            <template #header>
+              <vs-input v-model="search" border placeholder="Search" />
+            </template>
+            <template #thead>
+              <vs-tr>
+                <vs-th
+                  sort
+                  @click="recordsList = $vs.sortData($event, recordsList, 'id')"
+                >
+                  ID
+                </vs-th>
+                <vs-th
+                  sort
+                  @click="
+                    recordsList = $vs.sortData($event, recordsList, 'title')
+                  "
+                >
+                  Title
+                </vs-th>
+                <vs-th> Option </vs-th>
+              </vs-tr>
+            </template>
+            <template #tbody>
+              <vs-tr
+                :key="i"
+                v-for="(tr, i) in $vs.getSearch(recordsList, search)"
+                :data="tr"
+              >
+                <vs-td>
+                  {{ tr.id }}
+                </vs-td>
+                <vs-td>
+                  {{ tr.title }}
+                </vs-td>
+                <vs-td>
+                  <vs-button gradient success @click="myFunc(tr.id)">
+                    Open
+                  </vs-button>
+                </vs-td>
+              </vs-tr>
+            </template>
+          </vs-table>
+        </vs-col>
+      </vs-row>
     </div>
 
-    <div class="center">
-      
-    </div>
+    <div class="center"></div>
 
     <hr />
     <br />
     <br />
-    
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import AppHeader from "../layout/AppHeader.vue";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
+import socket from "../utils/socket";
 
 export default {
   name: "Home",
@@ -90,79 +100,8 @@ export default {
       url: "",
       bio: "",
       records: [],
-      search: '',
-      users: [
-          {
-            "id": 1,
-            "name": "Leanne Graham",
-            "username": "Bret",
-            "email": "Sincere@april.biz",
-            "website": "hildegard.org",
-          },
-          {
-            "id": 2,
-            "name": "Ervin Howell",
-            "username": "Antonette",
-            "email": "Shanna@melissa.tv",
-            "website": "anastasia.net",
-          },
-          {
-            "id": 3,
-            "name": "Clementine Bauch",
-            "username": "Samantha",
-            "email": "Nathan@yesenia.net",
-            "website": "ramiro.info",
-          },
-          {
-            "id": 4,
-            "name": "Patricia Lebsack",
-            "username": "Karianne",
-            "email": "Julianne.OConner@kory.org",
-            "website": "kale.biz",
-          },
-          {
-            "id": 5,
-            "name": "Chelsey Dietrich",
-            "username": "Kamren",
-            "email": "Lucio_Hettinger@annie.ca",
-            "website": "demarco.info",
-          },
-          {
-            "id": 6,
-            "name": "Mrs. Dennis Schulist",
-            "username": "Leopoldo_Corkery",
-            "email": "Karley_Dach@jasper.info",
-            "website": "ola.org",
-          },
-          {
-            "id": 7,
-            "name": "Kurtis Weissnat",
-            "username": "Elwyn.Skiles",
-            "email": "Telly.Hoeger@billy.biz",
-            "website": "elvis.io",
-          },
-          {
-            "id": 8,
-            "name": "Nicholas Runolfsdottir V",
-            "username": "Maxime_Nienow",
-            "email": "Sherwood@rosamond.me",
-            "website": "jacynthe.com",
-          },
-          {
-            "id": 9,
-            "name": "Glenna Reichert",
-            "username": "Delphine",
-            "email": "Chaim_McDermott@dana.io",
-            "website": "conrad.com",
-          },
-          {
-            "id": 10,
-            "name": "Clementina DuBuque",
-            "username": "Moriah.Stanton",
-            "email": "Rey.Padberg@karina.biz",
-            "website": "ambrose.net",
-          }
-        ]
+      search: "",
+      socketUserID: "",
     };
   },
   methods: {
@@ -190,18 +129,93 @@ export default {
       const loading = this.$vs.loading();
       this.$store.dispatch("fetchSky", { seed: this.seed, loading });
     },
-    async myFunc(id){
-      await this.$store.dispatch("decryptHR", {id});
-        let route = this.$router.resolve({path: '/content/' + id});
+    sessionIDstore(takeID){
+      this.socketUserID = takeID;
+    },
+    async myFunc(id) {
+      await this.$store.dispatch("decryptHR", { id });
+      let route = this.$router.resolve({ path: "/content/" + id });
       setTimeout(() => {
         window.open(route.href, "_self");
       }, 10000);
+    },
+    async retrieveDispatch(Pname, cid){
+       
+      let payload = {
+        cid: cid,
+        name: Pname
+      };
+      console.log(payload);
+      const loading = this.$vs.loading();
+      await this.$store.dispatch("retireve", payload);
+      setTimeout(() => {
+        loading.close();
+      }, 3000);
     }
   },
-  created: async () => {
+  created() {
+    const sessionID = localStorage.getItem("sessionID");
+
+    if (sessionID != undefined) {
+      socket.auth = { sessionID };
+      socket.connect();
+    } else {
+      socket.auth = { did: this.did };
+      socket.connect();
+
+      console.log(socket.id)
+      let takeID = socket.id.slice()
+      this.sessionIDstore(takeID)
+
+      socket.on("session", ({ sessionID, userID }) => {
+        // attach the session ID to the next reconnection attempts
+        socket.auth = { sessionID };
+        // store it in the localStorage
+        localStorage.setItem("sessionID", sessionID);
+        // save the ID of the user
+        socket.userID = userID;
+      });
+    }
+
+    socket.on("connect", () => {
+      console.log(socket.id);
+    });
+
+    socket.on("session", ({ sessionID, userID }) => {
+      // attach the session ID to the next reconnection attempts
+      socket.auth = { sessionID };
+      // store it in the localStorage
+      localStorage.setItem("sessionID", sessionID);
+      // save the ID of the user
+      socket.userID = userID;
+    });
+
+    socket.on("connect_error", (err) => {
+      if (err.message === "invalid username") {
+        this.usernameAlreadySelected = false;
+      }
+    });
+
+    socket.on("private message", ({ Pname, cid, from }) => {
+      console.log("From: " + from);
+      console.log("Content");
+      console.log(Pname);
+      console.log(cid);
+      this.retrieveDispatch(Pname, cid)
+    });
+
+    socket.onAny((event, ...args) => {
+      console.log(event, args);
+    });
+    console.dir(socket);
+  },
+  destroyed() {
+    socket.off("connect");
+    socket.off("disconnect");
+    socket.off("private message");
   },
   computed: {
-     ...mapState(['recordsList', 'did', 'ethaddress'])
+    ...mapState(["recordsList", "did", "ethaddress"]),
   },
 };
 </script>

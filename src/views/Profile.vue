@@ -3,36 +3,47 @@
     <div class="mb-3">
       <app-header> </app-header>
     </div>
-    <h1>Your Profile</h1>
 
-    <div class="frame">
-      <div id="center">
-        <div class="card">
-          <div class="left">
-            <div class="avatar">
-              <div class="circle"></div>
-              <div class="circle"></div>
-              <img
-                src="https://pbs.twimg.com/profile_images/894730722271010816/1g-2p3_m_400x400.jpg"
-              />
+    <div class="background">
+      <div class="container">
+        <div class="screen">
+          <div class="screen-body">
+            <div class="screen-body-item left">
+              <div class="app-title">
+                <span>YOUR</span>
+                <span>PROFILE</span>
+              </div>
+              <div class="app-contact">Powered By Identity Index</div>
             </div>
-            <div class="info">
-              <span class="big">salix dubois</span
-              ><span class="small">programmer</span>
-            </div>
-            <div class="buttons">
-              <button class="flw" @click="editProfile">edit</button>
-            </div>
-          </div>
-          <div class="right">
-            <div class="stats posts">
-              <span class="big">523</span><span class="small">posts</span>
-            </div>
-            <div class="stats likes">
-              <span class="big">1387</span><span class="small">likes</span>
-            </div>
-            <div class="stats flwrs">
-              <span class="big">146</span><span class="small">followers</span>
+            <div class="screen-body-item">
+              <div class="img-circle">
+                <img :src="profilePic" alt="profile-image" />
+              </div>
+              <div class="app-form">
+                <div class="app-form-group message">
+                  <p>{{ profile.name }}</p>
+                </div>
+                <div class="app-form-group">
+                  <p>{{ profile.gender }}</p>
+                </div>
+                <div class="app-form-group">
+                  <p>{{ profile.birthDate }}</p>
+                </div>
+                <div class="app-form-group">
+                  <p>{{ profile.homeLocation }}</p>
+                </div>
+                <div class="app-form-group">
+                  <p>{{ profile.description }}</p>
+                </div>
+
+                <div class="app-form-group buttons">
+                  <button class="app-form-button" @click="home">HOME</button>
+                  <button class="app-form-button"></button>
+                  <button class="app-form-button" @click="editProfile">
+                    EDIT
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -59,169 +70,187 @@ h1 {
   position: relative;
   text-align: left;
 }
-
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:700,600,300");
-.frame {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  width: 400px;
-  height: 400px;
-  margin-top: -200px;
-  margin-left: -200px;
-  border-radius: 2px;
-  box-shadow: 4px 8px 16px 0 rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  background: linear-gradient(to bottom left, #2d6120, #bee6b4);
-  background-size: 125% 125%;
-  color: #2d6120;
-  font-family: "Open Sans", Helvetica, sans-serif;
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+body {
+  background: linear-gradient(to right, #ebad27 0%, #ffb000 100%);
+  font-size: 12px;
 }
 
-.card {
-  width: 320px;
-  height: 300px;
-  background: white;
-  box-shadow: 4px 8px 16px 0 #1b3b14;
-}
-.card .left {
-  position: absolute;
-  left: 0;
-  width: 190px;
-  height: 300px;
-  overflow: hidden;
-}
-.card .left .avatar {
-  position: absolute;
-  left: 60px;
-  top: 32px;
-  width: 70px;
-  height: 70px;
+img {
   border-radius: 50%;
-  cursor: pointer;
-  background: #bee6b4;
+  max-width: 12.5rem;
+  height: 12.5rem;
+  aspect-ratio: 1/1;
+  object-fit: cover;
 }
-.card .left .avatar .circle {
-  box-sizing: border-box;
-  position: absolute;
-  border-radius: 50%;
-  transition: all 1.5s ease-in-out;
-  border: 1px solid;
+
+body,
+button,
+p {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  resize: none;
+  color: #fff;
 }
-.card .left .avatar .circle:first-child {
-  left: -3px;
-  top: -3px;
-  width: 76px;
-  height: 76px;
-  border-color: #2d6120 #2d6120 #2d6120 transparent;
+
+.background {
+  display: flex;
+  min-height: 100vh;
 }
-.card .left .avatar .circle:nth-child(2) {
-  left: -6px;
-  top: -6px;
-  width: 82px;
-  height: 82px;
-  border-color: #2d6120 transparent #2d6120 #2d6120;
+
+.container {
+  flex: 0 1 800px;
+  margin: auto;
+  padding: 10px;
+  margin-top: 50px;
 }
-.card .left .avatar:hover .circle:first-child {
-  transform: rotate(360deg);
-}
-.card .left .avatar:hover .circle:nth-child(2) {
-  transform: rotate(-360deg);
-}
-.card .left .avatar img {
-  width: inherit;
-  height: inherit;
-  display: block;
-  border-radius: inherit;
-}
-.card .left .info {
-  position: absolute;
-  text-align: center;
-  top: 122px;
-  width: 100%;
-}
-.card .left .info span {
-  display: block;
-}
-.card .left .info span.small {
-  top: 22px;
-}
-.card .left .buttons {
-  position: absolute;
-  text-align: center;
-  bottom: 32px;
-  width: 100%;
-  height: 80px;
-}
-.card .left .buttons button {
-  padding-top: 2px;
-  text-transform: capitalize;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-  color: #2d6120;
-  width: 120px;
-  height: 26px;
-  margin: 8px 0;
-  background: white;
-  border-radius: 15px;
-  border: none;
-  box-shadow: 0 0 0 1px #2d6120;
-  cursor: pointer;
-}
-.card .left .buttons button:hover {
-  background: #2d6120;
-  color: white;
-}
-.card .right {
-  position: absolute;
-  right: 0;
-  width: 130px;
-  height: 300px;
-}
-.card .right .stats {
+
+.screen {
   position: relative;
-  height: 100px;
-  background: #cfecc7;
-  box-shadow: 0 -1px white;
-  cursor: pointer;
-}
-.card .right .stats:first-child {
-  box-shadow: none;
-}
-.card .right .stats:hover {
-  background: #bee6b4;
-}
-.card .right .stats span.big {
-  top: 30px;
-}
-.card .right .stats span.small {
-  top: 50px;
+  background: #3e3e3e;
+  border-radius: 15px;
 }
 
-span {
+.screen:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  bottom: 0;
+  border-radius: 15px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  z-index: -1;
+}
+
+.screen-body {
+  display: flex;
+}
+
+.screen-body-item {
+  flex: 4;
+  padding: 50px;
+}
+
+.screen-body-item.left {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.app-title {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  color: #ffb000;
+  font-size: 26px;
+  text-align: left;
+}
+
+.app-title:after {
+  content: "";
+  display: block;
   position: absolute;
   left: 0;
+  bottom: -10px;
+  width: 25px;
+  height: 4px;
+  background: #ffb000;
+}
+
+.app-contact {
+  margin-top: auto;
+  font-size: 8px;
+  color: #888;
+}
+
+.app-form-group {
+  margin-bottom: 15px;
+}
+
+.app-form-group.message {
+  margin-top: 40px;
+}
+
+.app-form-group.buttons {
+  margin-bottom: 0;
+  align-items: flex-start;
+}
+
+.app-form-control {
   width: 100%;
-  text-transform: capitalize;
-  text-align: center;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #666;
+  color: #ddd;
+  font-size: 14px;
+  /* text-transform: uppercase; */
+  outline: none;
+  transition: border-color 0.2s;
 }
-span.big {
-  font-size: 18px;
-  font-weight: 600;
+
+.app-form-control::placeholder {
+  color: #666;
 }
-span.small {
-  font-size: 12px;
-  font-weight: 300;
+
+.app-form-control:focus {
+  border-bottom-color: #ddd;
+}
+
+.app-form-button {
+  background: none;
+  border: none;
+  color: #ffb000;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  margin: 20px 5px 5px 10px;
+}
+
+.app-form-button:hover {
+  color: #ffb000;
+}
+
+@media screen and (max-width: 520px) {
+  .screen-body {
+    flex-direction: column;
+  }
+
+  .screen-body-item.left {
+    margin-bottom: 30px;
+  }
+
+  .app-title {
+    flex-direction: row;
+  }
+
+  .app-title span {
+    margin-right: 12px;
+  }
+
+  .app-title:after {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .screen-body {
+    padding: 40px;
+  }
+
+  .screen-body-item {
+    padding: 0;
+  }
 }
 </style>
 
@@ -229,7 +258,7 @@ span.small {
 <script>
 // @ is an alias to /src
 import AppHeader from "../layout/AppHeader.vue";
-//import { mapState } from "vuex";
+import { mapState } from "vuex";
 import socket from "../utils/socket";
 
 export default {
@@ -241,18 +270,24 @@ export default {
     return {
       active: false,
       name: "",
-      did: "",
       userID: "",
       sessionID: "",
+      src: "https://www.w3schools.com/howto/img_avatar2.png",
     };
   },
   methods: {
+     home() {
+      let route = this.$router.resolve({ path: "/" });
+      window.open(route.href, "_self");
+    },
     editProfile() {
       let route = this.$router.resolve({ path: "/editprofile" });
       window.open(route.href, "_self");
     },
   },
-  computed: {},
+  computed: {
+    ...mapState(["profile", "did", "profilePic"]),
+  },
   created() {
     const sessionID = localStorage.getItem("sessionID");
 

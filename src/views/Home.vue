@@ -238,7 +238,7 @@ export default {
     socket.off("private message");
   },
   computed: {
-    ...mapState(["recordsList", "did", "ethaddress"]),
+    ...mapState(["recordsList", "did", "ethaddress", "profile"]),
   },
 };
 </script>

@@ -3,107 +3,270 @@
     <div class="mb-3">
       <app-header> </app-header>
     </div>
-    <h1 class="mt-3">New Record </h1>
-    
-    <div id="waterform">
-      <div class="formgroup" id="message-form">
-        <label for="title">Title of the Record</label>
-        <input type="text" name="" id="title" v-model="record.title" placeholder="Title">
-      </div>
-      <div class="formgroup" id="message-form">
-        <label for="doctor">Name of The Doctor</label>
-        <input type="text" name="" id="doctor" v-model="record.doctor" placeholder="Name of the Doctor">
-      </div>
-      <div class="formgroup" id="message-form">
-        <label for="D_date">Date of Diagnosis</label>
-        <input type="date" name="" id="D_date" v-model="record.dateDiagnosis">
-      </div>
-      <div class="formgroup" id="message-form">
-        <label for="message">Diagnosis</label>
-        <textarea id="message" name="message" v-model="record.diagnosis" placeholder="Describe in detail...."></textarea>
-      </div>
-      <div class="formgroup" id="message-form">
-        <label for="message">Medicines Prescribed</label>
-        <textarea id="message" name="message" v-model="record.medicines" placeholder="List all with dosage...."></textarea>
-      </div>
-      <div class="formgroup" id="message-form" style="padding-left: 200px; margin-top:15px;">
-        <vs-button size="large" @click="newRecord">
-        Submit
-      </vs-button>
+
+    <div class="background">
+      <div class="container">
+        <div class="screen">
+          <div class="screen-body">
+            <div class="screen-body-item left">
+              <div class="app-title">
+                <span>NEW</span>
+                <span>RECORD</span>
+              </div>
+              <div class="app-contact">Powered By Asclepius</div>
+            </div>
+            <div class="screen-body-item">
+              <div class="img-circle">
+                <img src="../../public/Asset1@3x.png" alt="profile-image" />
+              </div>
+              <div class="app-form">
+                <div class="app-form-group message">
+                  <input
+                    class="app-form-control"
+                    placeholder="Title"
+                    v-model="record.title"
+                  />
+                </div>
+                <div class="app-form-group">
+                  <input
+                    class="app-form-control"
+                    placeholder="Name of the Doctor"
+                    v-model="record.doctor"
+                  />
+                </div>
+                <div class="app-form-group">
+                  <input
+                    class="app-form-control"
+                    placeholder="Date of Diagnosis"
+                    v-model="record.dateDiagnosis"
+                    type="date"
+                  />
+                </div>
+                <div class="app-form-group">
+                  <textarea
+                    class="app-form-control"
+                    placeholder="Describe in detail...."
+                    name="diagnosis"
+                    cols="30"
+                    rows="5"
+                    v-model="record.diagnosis"
+                  ></textarea>
+                </div>
+                <div class="app-form-group">
+                  <textarea
+                    class="app-form-control"
+                    placeholder="List all with dosage...."
+                    name="medicines"
+                    cols="30"
+                    rows="5"
+                    v-model="record.medicines"
+                  ></textarea>
+                </div>
+                
+                <div class="app-form-group buttons">
+                  <vs-button size="large" @click="newRecord">
+                    Submit
+                  </vs-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    
-    
   </div>
 </template>
 
 <style scoped>
-
-h1{
-	font-weight: normal;
-	font-size: 4em;
-	margin: 0 auto;
-	margin-top: 100px;
-	width: 500px;
-	text-align: center;
+h1 {
+  font-weight: normal;
+  font-size: 4em;
+  margin: 0 auto;
+  margin-top: 100px;
+  width: 500px;
+  text-align: center;
 }
 
-#form{
-	height: 100%;	
-	overflow: hidden;
-	position: relative;
-	
-}
-div#waterform{
-	margin: 0 auto;
-	width: 500px;
-	padding-top: 40px;
-	color: black;
-	position: relative;
-	
-}
-label, input, textarea{
-	display: block;	
-}
-input, textarea{
-	width: 500px;	
-	border: none;
-	border-radius: 10px;
-	outline: none;
-	padding: 10px;
-	font-size: 1em;
-	color: #000;
-	transition: border 0.5s;
-	-webkit-transition: border 0.5s;
-	-moz-transition: border 0.5s;
-	-o-transition: border 0.5s;
-	border: solid 1px #c0c0c0;	
-	-webkit-box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	box-sizing:border-box;
-  background-color: rgb(252, 250, 250);
-	
-}
-input:focus, textarea:focus{
-	border: solid 1.5px #acabab;	
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-textarea{
-	height: 100px;	
-	resize: none; 
-	overflow: auto;
+body {
+  background: linear-gradient(to right, #ebad27 0%, #ffb000 100%);
+  font-size: 12px;
 }
 
-label{
-	margin-top: 20px;
+body,
+button,
+input,
+textarea {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  resize: none;
+}
+
+img {
+  max-width: 12.5rem;
+  height: 12.5rem;
+  object-fit: cover;
+}
+
+.background {
+  display: flex;
+  min-height: 100vh;
+}
+
+.container {
+  flex: 0 1 800px;
+  margin: auto;
+  padding: 10px;
+  margin-top: 50px;
+}
+
+.screen {
+  position: relative;
+  background: #3e3e3e;
+  border-radius: 15px;
+}
+
+.screen:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  bottom: 0;
+  border-radius: 15px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  z-index: -1;
+}
+
+.screen-body {
+  display: flex;
+}
+
+.screen-body-item {
+  flex: 2;
+  padding: 50px;
+}
+
+.screen-body-item.left {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.app-title {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  color: #ffb000;
+  font-size: 26px;
   text-align: left;
-  padding-bottom: 10px;
-}
-.formgroup, .formgroup-active, .formgroup-error{
-	width: 566px;
-	padding-top: 2px;
 }
 
+.app-title:after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 25px;
+  height: 4px;
+  background: #ffb000;
+}
+
+.app-contact {
+  margin-top: auto;
+  font-size: 8px;
+  color: #888;
+}
+
+.app-form-group {
+  margin-bottom: 15px;
+}
+
+.app-form-group.message {
+  margin-top: 40px;
+}
+
+.app-form-group.buttons {
+  margin-bottom: 0;
+  align-items: flex-start;
+}
+
+.app-form-control {
+  width: 100%;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #666;
+  color: #ddd;
+  font-size: 14px;
+  /* text-transform: uppercase; */
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.app-form-control::placeholder {
+  color: #666;
+}
+
+.app-form-control:focus {
+  border-bottom-color: #ddd;
+}
+
+.app-form-button {
+  background: none;
+  border: none;
+  color: #ffb000;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  margin: 5px 10px;
+}
+
+.app-form-button:hover {
+  color: #ffb000;
+}
+
+@media screen and (max-width: 520px) {
+  .screen-body {
+    flex-direction: column;
+  }
+
+  .screen-body-item.left {
+    margin-bottom: 30px;
+  }
+
+  .app-title {
+    flex-direction: row;
+  }
+
+  .app-title span {
+    margin-right: 12px;
+  }
+
+  .app-title:after {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .screen-body {
+    padding: 40px;
+  }
+
+  .screen-body-item {
+    padding: 0;
+  }
+}
 </style>
 
 <script>
@@ -125,16 +288,15 @@ export default {
       url: "",
       bio: "",
       profile: {},
-      search: '',
+      search: "",
       record: {
         date: new Date().toISOString(),
         title: "",
         doctor: "",
-        dateDiagnosis: "", 
+        dateDiagnosis: "",
         medicines: "",
         diagnosis: "",
-      }
-      
+      },
     };
   },
   methods: {
@@ -144,16 +306,16 @@ export default {
         loading.close();
       }, 11000);
     },
-    async newRecord(){
+    async newRecord() {
       let record2 = this.record;
       console.log(record2);
-      await this.$store.dispatch("encryptStore", {record: record2});
-      let route = this.$router.resolve({path: '/'});
+      await this.$store.dispatch("encryptStore", { record: record2 });
+      let route = this.$router.resolve({ path: "/" });
       setTimeout(() => {
         window.open(route.href, "_self");
       }, 3000);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

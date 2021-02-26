@@ -5,36 +5,52 @@
     </div>
     <div class="background">
       <div class="container">
-        <div class="screen">          
+        <div class="screen">
           <div class="screen-body">
-            <div class="screen-body-item left">
+            <div class="screen-body-item left">   
               <div class="app-title">
-                <span>EDIT</span>
+                <span>EDIT</span> 
                 <span>PROFILE</span>
               </div>
-              <div class="app-contact">CONTACT INFO : +62 81 314 928 595</div>
+              <div class="app-contact">Powered By Identity Index</div>
             </div>
             <div class="screen-body-item">
+              <div class="img-circle">
+                <img :src="src" alt="profile-image" />
+              </div>
               <div class="app-form">
+                <div class="app-form-group message">
+                  <input class="app-form-control" placeholder="Name" v-model="profile.name">
+                </div>
+                <div class="app-form-group">
+                  <input class="app-form-control" placeholder="Gender" v-model="profile.gender">
+                </div>
+                <div class="app-form-group">
+                  <input class="app-form-control" placeholder="Residence" v-model="profile.homeLocation">
+                </div>
+                <div class="app-form-group">
+                  <input class="app-form-control" placeholder="Birthdate" v-model="profile.birthDate" type="date">
+                </div>
+                <div class="app-form-group">
+                  <textarea class="app-form-control" placeholder="Bio" name="description" cols="30" rows="5" v-model="profile.description"></textarea>
+                </div>
                 <div class="app-form-group">
                   <input
                     class="app-form-control"
-                    placeholder="NAME"
-                    value="Krisantus Wanandi"
-                  />
-                </div>
-                <div class="app-form-group">
-                  <input class="app-form-control" placeholder="EMAIL" />
-                </div>
-                <div class="app-form-group">
-                  <input class="app-form-control" placeholder="CONTACT NO" />
-                </div>
-                <div class="app-form-group message">
-                  <input class="app-form-control" placeholder="MESSAGE" />
+                    placeholder="Profile Image"
+                    type="file"
+                    accept="image/*"
+                    id="profileImage"
+                    name="profileImage"
+                    @change="updateImage"
+                  >
                 </div>
                 <div class="app-form-group buttons">
-                  <button class="app-form-button">CANCEL</button>
-                  <button class="app-form-button">SEND</button>
+                  <button class="app-form-button" @click="cancel">
+                    CANCEL
+                  </button>
+                  <button class="app-form-button"></button>
+                  <button class="app-form-button" @click="updateProfile">SUBMIT</button>
                 </div>
               </div>
             </div>
@@ -57,6 +73,14 @@ h1 {
 
 .mb-3 {
   margin-bottom: 3rem;
+}
+
+img {
+  border-radius: 50%;
+  max-width: 12.5rem;
+  height: 12.5rem;
+  aspect-ratio: 1/1;
+  object-fit: cover;
 }
 
 .content {
@@ -83,10 +107,11 @@ body {
 
 body,
 button,
-input {
+input, textarea {
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   letter-spacing: 1.4px;
+  resize: none;
 }
 
 .background {
@@ -125,12 +150,13 @@ input {
 }
 
 .screen-body-item {
-  flex: 1;
+  flex: 2;
   padding: 50px;
 }
 
 .screen-body-item.left {
   display: flex;
+  flex: 1;
   flex-direction: column;
 }
 
@@ -170,7 +196,7 @@ input {
 
 .app-form-group.buttons {
   margin-bottom: 0;
-  text-align: right;
+  align-items: flex-start;
 }
 
 .app-form-control {
@@ -181,7 +207,7 @@ input {
   border-bottom: 1px solid #666;
   color: #ddd;
   font-size: 14px;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   outline: none;
   transition: border-color 0.2s;
 }
@@ -201,12 +227,12 @@ input {
   font-size: 14px;
   cursor: pointer;
   outline: none;
+  margin: 5px 10px;
 }
 
 .app-form-button:hover {
   color: #ffb000;
 }
-
 
 @media screen and (max-width: 520px) {
   .screen-body {
@@ -260,9 +286,55 @@ export default {
       did: "",
       userID: "",
       sessionID: "",
+      src: "https://www.w3schools.com/howto/img_avatar2.png",
+      selectedImage: null,
+      imageHeight: 0,
+      imageWidth: 0,
+      profile:{
+        name: "",
+        description: "",
+        gender: "",
+        homeLocation: "",
+        birthDate: null,
+        image: null
+      }
     };
   },
-  methods: {},
+  methods: {
+    cancel() {
+      let route = this.$router.resolve({ path: "/profile" });
+      window.open(route.href, "_self");
+    },
+    updateImage(e) {
+      const file = e.target.files[0];
+      this.selectedImage = file;
+
+      let takeImage = new Image()
+      this.src = URL.createObjectURL(file);
+      takeImage.src = this.src
+      setTimeout(() =>{
+        console.log(takeImage.width)
+        this.imageWidth = takeImage.width
+        console.log(takeImage.height)
+        this.imageHeight = takeImage.height
+
+      }, 1500)
+    },
+    async updateProfile(){
+      let profile = this.profile;
+      let selectedImage = this.selectedImage
+      let imageHeight = this.imageHeight
+      let imageWidth = this.imageWidth
+      console.log(imageHeight);
+      console.log(imageWidth);
+      await this.$store.dispatch("updateProfile", {profile, selectedImage, imageHeight, imageWidth});
+
+      let route = this.$router.resolve({path: '/profile'});
+      setTimeout(() => {
+        window.open(route.href, "_self");
+      }, 3000);
+    }
+  },
   computed: {},
   created() {
     const sessionID = localStorage.getItem("sessionID");

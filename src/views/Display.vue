@@ -5,29 +5,67 @@
     </div>
     <h1>Viewing Your Health Record</h1>
 
-    <div class="content">
-      <h3>Title: {{ currentRecord.title }}</h3>
-      <h4>Date of Diagnosis: {{ currentRecord.dateDiagnosis }}</h4>
-      <h4>Name of the Doctor: {{ currentRecord.doctor }}</h4>
-      <h4>Diagnosis</h4>
-      <p>{{ currentRecord.diagnosis }}</p>
-      <h4>Medicines</h4>
-      <p>{{ currentRecord.medicines }}</p>
-      <h6>Document Created On: {{ currentRecord.date }}</h6>
-      <h6>CID: {{ $route.params.id }} <small>(IPFS Doc ID)</small></h6>
+    <div class="background">
+      <div class="container">
+        <div class="screen">
+          <div class="screen-body">
+            <div class="screen-body-item left">
+              <div class="app-title">
+                <span>HEALTH</span>
+                <span>RECORD</span>
+              </div>
+              <div class="app-contact">
+                <span> Document Created On: {{ currentRecord.date }}</span>
+                <br /><br />
+                <span>CID: {{ $route.params.id }}</span>
+              </div>
+            </div>
+            <div class="screen-body-item">
+              <div class="img-circle">
+                <img src="../../public/Asset1@3x.png" alt="profile-image" />
+              </div>
+              <div class="app-form">
+                <div class="app-form-group message">
+                  <p>Title: {{ currentRecord.title }}</p>
+                </div>
+                <div class="app-form-group">
+                  <p>Date of Diagnosis:{{ currentRecord.dateDiagnosis }}</p>
+                </div>
+                <div class="app-form-group">
+                  <p>Name of the Doctor:{{ currentRecord.doctor }}</p>
+                </div>
+                <div class="app-form-group">
+                  <p>Diagnosis: {{ currentRecord.diagnosis }}</p>
+                </div>
+                <div class="app-form-group">
+                  <p>Medicines: {{ currentRecord.medicines }}</p>
+                </div>
 
-      <div style="padding: 0px 200px; display: block">
-        <div class="grid">
-          <vs-row>
-            <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="6">
-              <vs-button @click="home">
-                <i class="bx bx-home-alt"></i> Home
-              </vs-button>
-            </vs-col>
-            <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="6">
-              <vs-button @click="active = !active"> Share </vs-button>
-            </vs-col>
-          </vs-row>
+                <div class="app-form-group buttons">
+                  <vs-row>
+                    <vs-col
+                      vs-type="flex"
+                      vs-justify="center"
+                      vs-align="center"
+                      w="6"
+                    >
+                      <vs-button @click="home">
+                        <i class="bx bx-home-alt"></i> Home
+                      </vs-button>
+                    </vs-col>
+                    <vs-col
+                      vs-type="flex"
+                      vs-justify="center"
+                      vs-align="center"
+                      w="6"
+                    >
+                      <vs-button @click="active = !active"> Share </vs-button>
+                    </vs-col>
+                  </vs-row>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -41,7 +79,7 @@
         class="con-form"
         style="width: 400px; text-align: center; padding: 0px 0px"
       >
-        <p>
+        <p style="color: #000">
           Enter the exact DID of the doctor you wish to share your health record
           with. Note this action cannot be reveresed by you.
         </p>
@@ -49,7 +87,7 @@
           class="formgroup"
           style="display: block; align-items: center; padding: 20px 100px"
         >
-          <vs-input placeholder="Name" v-model="name">
+          <vs-input placeholder="Name" v-model="name" >
             <template #icon> @ </template>
           </vs-input>
           <br />
@@ -90,6 +128,187 @@ h1 {
   position: relative;
   text-align: left;
 }
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: linear-gradient(to right, #ebad27 0%, #ffb000 100%);
+  font-size: 12px;
+}
+
+img {
+  max-width: 12.5rem;
+  height: 12.5rem;
+  object-fit: cover;
+}
+
+body,
+button,
+p {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  resize: none;
+  color: #fff;
+}
+
+.background {
+  display: flex;
+  min-height: 100vh;
+}
+
+.container {
+  flex: 0 1 800px;
+  margin: auto;
+  padding: 10px;
+  margin-top: 50px;
+}
+
+.screen {
+  position: relative;
+  background: #3e3e3e;
+  border-radius: 15px;
+}
+
+.screen:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 20px;
+  right: 20px;
+  bottom: 0;
+  border-radius: 15px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  z-index: -1;
+}
+
+.screen-body {
+  display: flex;
+}
+
+.screen-body-item {
+  flex: 4;
+  padding: 50px;
+}
+
+.screen-body-item.left {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.app-title {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  color: #ffb000;
+  font-size: 26px;
+  text-align: left;
+}
+
+.app-title:after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 25px;
+  height: 4px;
+  background: #ffb000;
+}
+
+.app-contact {
+  margin-top: auto;
+  font-size: 8px;
+  color: #888;
+}
+
+.app-form-group {
+  margin-bottom: 15px;
+}
+
+.app-form-group.message {
+  margin-top: 40px;
+}
+
+.app-form-group.buttons {
+  margin-bottom: 0;
+  align-items: flex-start;
+}
+
+.app-form-control {
+  width: 100%;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #666;
+  color: #ddd;
+  font-size: 14px;
+  /* text-transform: uppercase; */
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.app-form-control::placeholder {
+  color: #666;
+}
+
+.app-form-control:focus {
+  border-bottom-color: #ddd;
+}
+
+.app-form-button {
+  background: none;
+  border: none;
+  color: #ffb000;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  margin: 20px 5px 5px 10px;
+}
+
+.app-form-button:hover {
+  color: #ffb000;
+}
+
+@media screen and (max-width: 520px) {
+  .screen-body {
+    flex-direction: column;
+  }
+
+  .screen-body-item.left {
+    margin-bottom: 30px;
+  }
+
+  .app-title {
+    flex-direction: row;
+  }
+
+  .app-title span {
+    margin-right: 12px;
+  }
+
+  .app-title:after {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .screen-body {
+    padding: 40px;
+  }
+
+  .screen-body-item {
+    padding: 0;
+  }
+}
 </style>
 
 
@@ -97,7 +316,7 @@ h1 {
 // @ is an alias to /src
 import AppHeader from "../layout/AppHeader.vue";
 import { mapState } from "vuex";
-import socket from "../utils/socket"
+import socket from "../utils/socket";
 
 export default {
   name: "Display",
@@ -110,7 +329,7 @@ export default {
       name: "",
       did: "",
       userID: "",
-      sessionID: ""
+      sessionID: "",
     };
   },
   methods: {
@@ -123,7 +342,7 @@ export default {
         did: this.did,
         name: this.name,
         record: this.currentRecord,
-        sessionID: this.sessionID
+        sessionID: this.sessionID,
       };
       console.log(payload);
       const loading = this.$vs.loading();
@@ -135,7 +354,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["currentRecord"]),
+    ...mapState(["currentRecord", "profile"]),
   },
   created() {
     const sessionID = localStorage.getItem("sessionID");
@@ -144,7 +363,7 @@ export default {
       socket.auth = { sessionID };
       socket.connect();
     }
-    
+
     socket.on("connect", () => {
       console.log(socket.id);
     });

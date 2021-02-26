@@ -8,7 +8,8 @@ const providerOptions = {
   portis: {
     package: Portis,
     options: {
-      id: "8f5cf962-ad62-4861-ab0c-7b234b6e6cff"
+      dappId: "8f5cf962-ad62-4861-ab0c-7b234b6e6cff",
+      network: "mainnet"
     }
   },
   walletconnect: {

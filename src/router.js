@@ -5,6 +5,8 @@ import AppHeader from './layout/AppHeader.vue'
 import Display from './views/Display.vue'
 import NewRecord from './views/NewRecord.vue'
 import Login from './views/Login.vue'
+import Profile from './views/Profile.vue'
+import EditProfile from './views/EditProfile.vue'
 
 Vue.use(VueRouter)
 
@@ -36,6 +38,15 @@ const routes = [
     path: '/content/:id',
     name: 'Display',
     components: {default: Display, header: AppHeader}
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    components: {default: Profile, header: AppHeader}
+  }, {
+    path: '/editprofile',
+    name: 'EditProfile',
+    components: {default: EditProfile, header: AppHeader}
   },
   {
     path: '/new',

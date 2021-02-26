@@ -4,6 +4,7 @@
       <template #left>
         <vs-navbar-item > Asclepius </vs-navbar-item>
         <vs-navbar-item href="/" target="_self"> Home </vs-navbar-item>
+        <vs-navbar-item href="/profile" target="_self"> Profile </vs-navbar-item>
       </template>
       <template #right>
         <vs-button primary @click="newRecord">New Record</vs-button>
@@ -49,4 +50,9 @@ export default {
 </script>
 
 <style>
+div.examplex{
+  position: absolute;
+  top: 0%;
+  left: 0%;
+}
 </style>

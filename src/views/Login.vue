@@ -2,7 +2,7 @@
   <div class="home">
     <div class="center" style="margin-top: 250px">
       <img
-      alt="Vue logo"
+      alt="Asclepius logo"
       src="../../public/Asset1@3x.png"
       width="250px"
       style="margin-bottom:25px"

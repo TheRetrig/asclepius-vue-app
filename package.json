@@ -26,6 +26,7 @@
     "ipfs-http-client": "^49.0.2",
     "js-cookie": "^2.2.1",
     "multiformats": "^3.0.3",
+    "qrcode": "^1.4.4",
     "skynet-js": "^2.9.0",
     "socket.io-client": "^3.1.1",
     "vue": "^2.6.11",

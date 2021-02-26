@@ -24,6 +24,9 @@
         >
           <h4>Your DID : {{ did }}</h4>
           <h4>Your Session ID : {{ socketUserID }}</h4>
+          <div class="center mb-3" v-if="socketUserID != null">
+            <vs-button @click="active = !active"> Open Dialog </vs-button>
+          </div>
           <vs-table>
             <template #header>
               <vs-input v-model="search" border placeholder="Search" />
@@ -71,7 +74,23 @@
       </vs-row>
     </div>
 
-    <div class="center"></div>
+    <div class="center">
+      <vs-dialog v-model="active">
+        <template #header>
+          <h4 class="not-margin">QR COde <b>Generator</b></h4>
+        </template>
+
+        <div class="con-form">
+          <canvas id="canvas"></canvas>
+        </div>
+
+        <template #footer>
+          <div class="footer-dialog">
+            <vs-button block @click="createQRCode"> Generate QR Code </vs-button>
+          </div>
+        </template>
+      </vs-dialog>
+    </div>
 
     <hr />
     <br />
@@ -84,6 +103,7 @@
 import AppHeader from "../layout/AppHeader.vue";
 import { mapState } from "vuex";
 import socket from "../utils/socket";
+import QRcode from 'qrcode'
 
 export default {
   name: "Home",
@@ -92,19 +112,24 @@ export default {
   },
   data() {
     return {
-      active: 0,
-      seed: "",
-      text: "",
-      name: "",
-      homeLocation: "",
-      url: "",
-      bio: "",
+      active: false,
       records: [],
       search: "",
       socketUserID: "",
     };
   },
   methods: {
+    createQRCode(){
+      console.log(this.socketUserID)
+      console.log(this.did)
+      let text = JSON.stringify({sessionID: this.socketUserID, did: this.did})
+      let canvas = document.getElementById('canvas')
+
+      QRcode.toCanvas(canvas, text, function(err) {
+        if(err) console.error(err);
+        console.log('successfully generated QR Code')
+      })
+    },
     openLoading() {
       const loading = this.$vs.loading();
       setTimeout(() => {
@@ -129,7 +154,7 @@ export default {
       const loading = this.$vs.loading();
       this.$store.dispatch("fetchSky", { seed: this.seed, loading });
     },
-    sessionIDstore(takeID){
+    sessionIDstore(takeID) {
       this.socketUserID = takeID;
     },
     async myFunc(id) {
@@ -139,11 +164,10 @@ export default {
         window.open(route.href, "_self");
       }, 10000);
     },
-    async retrieveDispatch(Pname, cid){
-       
+    async retrieveDispatch(Pname, cid) {
       let payload = {
         cid: cid,
-        name: Pname
+        name: Pname,
       };
       console.log(payload);
       const loading = this.$vs.loading();
@@ -151,7 +175,7 @@ export default {
       setTimeout(() => {
         loading.close();
       }, 3000);
-    }
+    },
   },
   created() {
     const sessionID = localStorage.getItem("sessionID");
@@ -163,9 +187,7 @@ export default {
       socket.auth = { did: this.did };
       socket.connect();
 
-      console.log(socket.id)
-      let takeID = socket.id.slice()
-      this.sessionIDstore(takeID)
+      console.log(socket.id);
 
       socket.on("session", ({ sessionID, userID }) => {
         // attach the session ID to the next reconnection attempts
@@ -178,6 +200,7 @@ export default {
     }
 
     socket.on("connect", () => {
+      this.socketUserID = socket.id;
       console.log(socket.id);
     });
 
@@ -201,7 +224,7 @@ export default {
       console.log("Content");
       console.log(Pname);
       console.log(cid);
-      this.retrieveDispatch(Pname, cid)
+      this.retrieveDispatch(Pname, cid);
     });
 
     socket.onAny((event, ...args) => {

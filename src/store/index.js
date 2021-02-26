@@ -191,7 +191,7 @@ export default new Vuex.Store({
       await ceramic.setDIDProvider(provider);
       console.log("Ceramic DID Provider set");
 
-      console.log('ID '+payload.id)
+      console.log('ID '+ payload.id)
       //create a new instance of ipfs and insert the dag jose formats
       const ipfs = await Ipfs.create({ ipld: { formats: [dagJoseFormat] } })  
 
@@ -199,8 +199,9 @@ export default new Vuex.Store({
       console.log(jwe)
       const data = await ceramic.did.decryptDagJWE(jwe)
       console.log(data)
-      await setTimeout(() => {
-          commit('auth', payload)
+      
+      setTimeout(() => {
+          commit('currentRecord',{ currentRecord: data})
           //loading.close();
         }, 4000)
     },

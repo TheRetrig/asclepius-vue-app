@@ -3,7 +3,7 @@
     <div class="mb-3">
       <app-header> </app-header>
     </div>
-    <h1>Viewing Your Health Record</h1>
+    <h1>Viewing Health Record</h1>
 
     <div class="background">
       <div class="container">
@@ -22,7 +22,7 @@
             </div>
             <div class="screen-body-item">
               <div class="img-circle">
-                <img src="../../public/Asset1@3x.png" alt="profile-image" />
+                <img src="../../public/Asset_W.png" alt="profile-image" />
               </div>
               <div class="app-form">
                 <div class="app-form-group message">
@@ -80,30 +80,50 @@
         style="width: 400px; text-align: center; padding: 0px 0px"
       >
         <p style="color: #000">
-          Enter the exact DID of the doctor you wish to share your health record
-          with. Note this action cannot be reveresed by you.
+          Select the QR Code image of the Doctor.
         </p>
+        <div class="center">
+
+        <qrcode-capture @decode="onDecode" />
+        </div>
         <div
           class="formgroup"
-          style="display: block; align-items: center; padding: 20px 100px"
+          style="display: block; align-items: center; padding: 20px 100px" v-if="result != ''"
         >
-          <vs-input placeholder="Name" v-model="name" >
-            <template #icon> @ </template>
-          </vs-input>
+          <div class="app-form-group">
+            <label for="name">Name
+            <input
+              class="app-form-control"
+              placeholder="Name"
+              v-model="name"
+              readonly
+            ></label>
+          </div>
+          <div class="app-form-group">
+            <label for="name">DID
+            <input
+              class="app-form-control"
+              placeholder="did"
+              v-model="did"
+              readonly
+            ></label>
+          </div><div class="app-form-group">
+            <label for="name">Session ID
+            <input
+              class="app-form-control"
+              placeholder="Session ID"
+              v-model="sessionID"
+              readonly
+            ></label>
+          </div>
           <br />
-          <vs-input placeholder="DID" v-model="did">
-            <template #icon> DID </template>
-          </vs-input>
-          <br />
-          <vs-input placeholder="Session ID" v-model="sessionID">
-            <template #icon> ID </template>
-          </vs-input>
+          
         </div>
       </div>
 
       <template #footer>
         <div class="footer-dialog">
-          <vs-button block @click="shareDoc"> Confirm and Submit </vs-button>
+          <vs-button block @click="shareDoc" v-if="result != ''"> Confirm and Submit </vs-button>
         </div>
       </template>
     </vs-dialog>
@@ -150,12 +170,29 @@ img {
 
 body,
 button,
-p {
+p{
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   letter-spacing: 1.4px;
   resize: none;
   color: #fff;
+}
+
+input {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  resize: none;
+  color: #000;
+}
+
+label:before {
+  content: attr(type);
+  display: block;
+  margin: 28px 0 0;
+  font-size: 14px;
+  color: #5a5a5a;
+  text-align: left;
 }
 
 .background {
@@ -231,7 +268,21 @@ p {
 }
 
 .app-form-group {
-  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.app-form-group label{
+  display: block;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
 }
 
 .app-form-group.message {
@@ -249,7 +300,7 @@ p {
   background: none;
   border: none;
   border-bottom: 1px solid #666;
-  color: #ddd;
+  color: #000;
   font-size: 14px;
   /* text-transform: uppercase; */
   outline: none;
@@ -317,11 +368,13 @@ p {
 import AppHeader from "../layout/AppHeader.vue";
 import { mapState } from "vuex";
 import socket from "../utils/socket";
+import { QrcodeCapture } from "vue-qrcode-reader";
 
 export default {
   name: "Display",
   components: {
     AppHeader,
+    QrcodeCapture,
   },
   data() {
     return {
@@ -330,6 +383,7 @@ export default {
       did: "",
       userID: "",
       sessionID: "",
+      result: "",
     };
   },
   methods: {
@@ -352,12 +406,20 @@ export default {
         this.active = false;
       }, 3000);
     },
+    onDecode(result) {
+      this.result = result;
+      let content = JSON.parse(result)
+      console.log(content);
+      this.sessionID = content.sessionID;
+      this.did = content.did;
+    },
   },
   computed: {
     ...mapState(["currentRecord", "profile"]),
   },
   created() {
     const sessionID = localStorage.getItem("sessionID");
+    this.name = this.profile.name;
 
     if (sessionID) {
       socket.auth = { sessionID };

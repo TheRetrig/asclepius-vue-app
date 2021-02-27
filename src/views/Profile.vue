@@ -15,7 +15,7 @@
               </div>
               <div class="app-contact">Powered By Identity Index</div>
             </div>
-            <div class="screen-body-item">
+            <div class="screen-body-item" v-if="profile != undefined && profile.name != null">
               <div class="img-circle">
                 <img :src="profilePic" alt="profile-image" />
               </div>
@@ -35,14 +35,26 @@
                 <div class="app-form-group">
                   <p>{{ profile.description }}</p>
                 </div>
-
-                <div class="app-form-group buttons">
-                  <button class="app-form-button" @click="home">HOME</button>
-                  <button class="app-form-button"></button>
-                  <button class="app-form-button" @click="editProfile">
-                    EDIT
-                  </button>
-                </div>
+              </div>
+              <div class="app-form-group buttons">
+                <button class="app-form-button" @click="home">HOME</button>
+                <button class="app-form-button"></button>
+                <button class="app-form-button" @click="editProfile">
+                  EDIT
+                </button>
+              </div>
+            </div>
+            <div class="screen-body-item" v-else>
+              <p>
+                Your Profile doesn't exist or hasn't been initialized properly,
+                please click on edit and update your profile.
+              </p>
+              <div class="app-form-group buttons">
+                <button class="app-form-button" @click="home">HOME</button>
+                <button class="app-form-button"></button>
+                <button class="app-form-button" @click="editProfile">
+                  EDIT
+                </button>
               </div>
             </div>
           </div>
@@ -276,7 +288,7 @@ export default {
     };
   },
   methods: {
-     home() {
+    home() {
       let route = this.$router.resolve({ path: "/" });
       window.open(route.href, "_self");
     },
@@ -316,6 +328,7 @@ export default {
       console.log("Content");
       console.log(content);
     });
+    console.log(this.profile)
   },
 };
 </script>

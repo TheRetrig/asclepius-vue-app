@@ -1,43 +1,21 @@
 <template>
   <div class="home">
-    <div class="center" style="margin-top: 250px">
-      <img
-      alt="Asclepius logo"
-      src="../../public/Asset1@3x.png"
-      width="250px"
-      style="margin-bottom:25px"
-    />
-    </div>
-    <div class="center grid">
-      <vs-row>
-      <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="5">
-      </vs-col>
-      <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="1" class="mb-3">
-      <div class="div" style="margin: 100px 100px">
-        <vs-button
-          size="xl"
-          @click="auth"
-        >
-          LOGIN
-        </vs-button>
+    <div class="hero">
+      <div class="overlay"></div>
+      <div class="content">
+        <vs-button size="xl" @click="auth"> LOGIN </vs-button>
       </div>
-      </vs-col>
-    </vs-row>
     </div>
-    
   </div>
 </template>
 
 <script>
-
 export default {
   name: "Login",
-  components: {
-  },
+  components: {},
   data() {
     return {
       active: true,
-      
     };
   },
   methods: {
@@ -48,31 +26,74 @@ export default {
       }, 11000);
     },
     async auth() {
-      const vs = this.$vs;
-      let boolean = await this.$store.dispatch("ceramicAuth", {load: vs});
-      if(boolean){
-        let route = this.$router.resolve({path: '/'});
-         setTimeout(() => {
-          window.open(route.href, "_self")
-        }, 9500)
-        
-      }
-    }
-    
+      this.$store
+        .dispatch("ceramicAuth")
+        .then((boolean) => {
+          if (boolean) {
+            let route = this.$router.resolve({ path: "/" });
+            setTimeout(() => {
+              window.open(route.href, "_self");
+            }, 5000);
+          }
+        })
+        .catch((err) => console.error(err));
+      setTimeout(() => {
+        // eslint-disable-next-line no-unused-vars
+        let loading = this.$vs.loading();
+      }, 4500);
+    },
   },
   computed: {
     getAuth() {
       return this.$store.getters.authstatus;
-    }
+    },
   },
 };
 </script>
 <style scoped>
-
-.center{
+.center {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+.hero {
+  height: 1080px;
+  width: 100%;
+  background-image: url("../../public/Artboard2.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero .overlay {
+  background-color: #000;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: 0;
+  opacity: 0.3;
+}
+.hero .content {
+  color: #fff;
+  z-index: 2;
+  text-align: center;
+}
+.hero .content h1 {
+  font-size: 45px;
+  font-weight: 700;
+  font-family: "Montserrat", sans-serif;
+}
+.hero .content p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 25px;
 }
 </style>

@@ -140,7 +140,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async ceramicAuth({ commit }, payload) {
+    async ceramicAuth({ commit }) {
       const ethProvider = await web3Modal.connect();
       const addresses = await ethProvider.request({ method: "eth_accounts" });
       console.log("Got the ethaddress");
@@ -151,7 +151,6 @@ export default new Vuex.Store({
       console.log("3id connect func executed");
       const provider = await threeIdConnect.getDidProvider();
 
-      const loading = payload.load.loading();
 
       await ceramic.setDIDProvider(provider);
       console.log("Ceramic DID Provider set");
@@ -188,11 +187,9 @@ export default new Vuex.Store({
         }
         await setTimeout(() => {
           commit('auth', payload)
-          loading.close();
         }, 4000)
         return true;
       } else {
-        loading.close();
         return false;
       }
     },

@@ -1,16 +1,29 @@
 <template>
   <div class="home">
-    <div class="mb-3">
+    <div>
       <app-header> </app-header>
     </div>
+    <div class="hero">
+      <div class="overlay"></div>
+      <div class="content">
+        <h1></h1>
+      </div>
+    </div>
     <h1>All your Health Records will appear here</h1>
-    <img
-      alt="Vue logo"
-      src="../../public/Asset1@3x.png"
-      width="250px"
-      style="margin-bottom: 25px"
-    />
-
+    <div class="grid">
+      <vs-row>
+        <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="2">
+        </vs-col>
+        <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="4">
+          <h4>Your DID : {{ did }}</h4>
+        </vs-col>
+        <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="4"
+          ><h4>Your Session ID : {{ socketUserID }}</h4></vs-col
+        >
+        <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="2">
+        </vs-col>
+      </vs-row>
+    </div>
     <div class="center grid">
       <vs-row>
         <vs-col vs-type="flex" vs-justify="center" vs-align="center" w="3">
@@ -22,10 +35,8 @@
           w="6"
           class="mb-3"
         >
-          <h4>Your DID : {{ did }}</h4>
-          <h4>Your Session ID : {{ socketUserID }}</h4>
           <div class="center mb-3" v-if="socketUserID != null">
-            <vs-button @click="active = !active"> Open Dialog </vs-button>
+            <vs-button @click="active = !active"> QR Code </vs-button>
           </div>
           <vs-table>
             <template #header>
@@ -33,12 +44,7 @@
             </template>
             <template #thead>
               <vs-tr>
-                <vs-th
-                  sort
-                  @click="recordsList = $vs.sortData($event, recordsList, 'id')"
-                >
-                  ID
-                </vs-th>
+                <vs-th> ID </vs-th>
                 <vs-th
                   sort
                   @click="
@@ -86,29 +92,33 @@
 
         <template #footer>
           <div class="footer-dialog">
-            <vs-button block @click="createQRCode"> Generate QR Code </vs-button>
+            <vs-button block @click="createQRCode">
+              Generate QR Code
+            </vs-button>
           </div>
         </template>
       </vs-dialog>
     </div>
 
-    <hr />
     <br />
     <br />
+    <app-footer></app-footer>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import AppHeader from "../layout/AppHeader.vue";
+import AppFooter from "../layout/AppFooter.vue";
 import { mapState } from "vuex";
 import socket from "../utils/socket";
-import QRcode from 'qrcode'
+import QRcode from "qrcode";
 
 export default {
   name: "Home",
   components: {
     AppHeader,
+    AppFooter
   },
   data() {
     return {
@@ -119,16 +129,19 @@ export default {
     };
   },
   methods: {
-    createQRCode(){
-      console.log(this.socketUserID)
-      console.log(this.did)
-      let text = JSON.stringify({sessionID: this.socketUserID, did: this.did})
-      let canvas = document.getElementById('canvas')
+    createQRCode() {
+      console.log(this.socketUserID);
+      console.log(this.did);
+      let text = JSON.stringify({
+        sessionID: this.socketUserID,
+        did: this.did,
+      });
+      let canvas = document.getElementById("canvas");
 
-      QRcode.toCanvas(canvas, text, function(err) {
-        if(err) console.error(err);
-        console.log('successfully generated QR Code')
-      })
+      QRcode.toCanvas(canvas, text, function (err) {
+        if (err) console.error(err);
+        console.log("successfully generated QR Code");
+      });
     },
     openLoading() {
       const loading = this.$vs.loading();
@@ -136,33 +149,17 @@ export default {
         loading.close();
       }, 3000);
     },
-    auth() {
-      this.$store.dispatch("ceramicAuth");
-    },
-    publish() {
-      const loading = this.$vs.loading();
-      let seed = this.seed;
-      let text = this.text;
-      this.$store.dispatch("publish", { seed, text, loading });
-    },
-    updateProfile() {
-      const loading = this.$vs.loading();
-      console.log(this.profile);
-      this.$store.dispatch("updateProfile", { profile: this.profile, loading });
-    },
-    fetch() {
-      const loading = this.$vs.loading();
-      this.$store.dispatch("fetchSky", { seed: this.seed, loading });
-    },
     sessionIDstore(takeID) {
       this.socketUserID = takeID;
     },
     async myFunc(id) {
+      const loading = this.$vs.loading();
       await this.$store.dispatch("decryptHR", { id });
       let route = this.$router.resolve({ path: "/content/" + id });
       setTimeout(() => {
+        loading.close();
         window.open(route.href, "_self");
-      }, 10000);
+      }, 9000);
     },
     async retrieveDispatch(Pname, cid) {
       let payload = {
@@ -245,5 +242,47 @@ export default {
 <style scoped>
 .mb-3 {
   margin-bottom: 3rem;
+}
+
+.hero {
+  height: 550px;
+  width: 100%;
+  background-image: url("../../public/Artboard.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 43px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.hero .overlay {
+  background-color: #000;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: 0;
+  opacity: 0;
+}
+.hero .content {
+  color: #fff;
+  z-index: 2;
+  text-align: center;
+}
+.hero .content h1 {
+  font-size: 45px;
+  font-weight: 700;
+  font-family: "Montserrat", sans-serif;
+}
+.hero .content p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 25px;
 }
 </style>

@@ -30,7 +30,7 @@ export default {
         .dispatch("ceramicAuth")
         .then((boolean) => {
           if (boolean) {
-            let route = this.$router.resolve({ path: "/" });
+            let route = this.$router.resolve({ path: "/home" });
             setTimeout(() => {
               window.open(route.href, "_self");
             }, 5000);

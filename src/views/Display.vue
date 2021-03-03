@@ -388,7 +388,7 @@ export default {
   },
   methods: {
     home() {
-      let route = this.$router.resolve({ path: "/" });
+      let route = this.$router.resolve({ path: "/home" });
       window.open(route.href, "_self");
     },
     async shareDoc() {

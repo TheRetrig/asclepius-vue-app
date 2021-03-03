@@ -3,7 +3,7 @@
     <vs-navbar  :color="active" center-collapsed v-model="active">
       <template #left>
         <vs-navbar-item > Asclepius </vs-navbar-item>
-        <vs-navbar-item href="/" target="_self"> Home </vs-navbar-item>
+        <vs-navbar-item href="/home" target="_self"> Home </vs-navbar-item>
         <vs-navbar-item href="/profile" target="_self"> Profile </vs-navbar-item>
       </template>
       <template #right>
@@ -39,7 +39,7 @@ export default {
     async logout() {
       const loading = this.$vs.loading();
       await this.$store.dispatch("logoutTriggered");
-      let route = this.$router.resolve({path: '/login'});
+      let route = this.$router.resolve({path: '/'});
       setTimeout(() => {
         loading.close();
         window.open(route.href, "_self");

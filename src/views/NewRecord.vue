@@ -310,7 +310,7 @@ export default {
       let record2 = this.record;
       console.log(record2);
       await this.$store.dispatch("encryptStore", { record: record2 });
-      let route = this.$router.resolve({ path: "/" });
+      let route = this.$router.resolve({ path: "/home" });
       setTimeout(() => {
         window.open(route.href, "_self");
       }, 3000);

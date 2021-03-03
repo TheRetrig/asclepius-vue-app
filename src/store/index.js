@@ -24,9 +24,8 @@ import socket from '../utils/socket'
 multiformats.multicodec.add(dagJose)
 const format = legacy(multiformats, dagJose.name)
 
-//const DEFAULT_API_URL = "https://ceramic-clay.3boxlabs.com";
-const DEFAULT_API_URL = "http://localhost:7007";
-const API_URL = "http://localhost:5011"
+const DEFAULT_API_URL = "https://ceramic.asclepius.xyz";
+const API_URL = "https://ipfs.asclepius.xyz"
 const threeIdConnect = new ThreeIdConnect();
 const ceramic = new Ceramic(DEFAULT_API_URL);
 

@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "3id-connect": "^1.0.0-alpha.15",
-    "@ceramicnetwork/ceramic-http-client": "^0.7.3",
     "@ceramicnetwork/http-client": "^0.9.5",
     "@ceramicstudio/idx": "^0.7.0",
     "@ceramicstudio/idx-constants": "^0.7.0",
@@ -23,7 +22,6 @@
     "dids": "^1.1.1",
     "fortmatic": "^2.2.1",
     "identity-wallet": "^2.0.0-alpha.13",
-    "ipfs": "^0.54.2",
     "ipfs-http-client": "^49.0.2",
     "js-cookie": "^2.2.1",
     "multiformats": "^3.0.3",

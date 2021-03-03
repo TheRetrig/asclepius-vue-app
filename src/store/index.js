@@ -14,7 +14,7 @@ import web3Modal from "../utils/provider.js";
 
 import ipfsClient from 'ipfs-http-client'
 
-import Ipfs from 'ipfs'
+// import Ipfs from 'ipfs'
 import dagJose from 'dag-jose'
 import multiformats from 'multiformats/basics'
 import legacy from 'multiformats/legacy'
@@ -22,10 +22,11 @@ import legacy from 'multiformats/legacy'
 import socket from '../utils/socket'
 
 multiformats.multicodec.add(dagJose)
-const dagJoseFormat = legacy(multiformats, dagJose.name)
+const format = legacy(multiformats, dagJose.name)
 
 //const DEFAULT_API_URL = "https://ceramic-clay.3boxlabs.com";
 const DEFAULT_API_URL = "http://localhost:7007";
+const API_URL = "http://localhost:5011"
 const threeIdConnect = new ThreeIdConnect();
 const ceramic = new Ceramic(DEFAULT_API_URL);
 
@@ -210,7 +211,7 @@ export default new Vuex.Store({
 
       console.log('ID ' + payload.id)
       //create a new instance of ipfs and insert the dag jose formats
-      const ipfs = await Ipfs.create({ ipld: { formats: [dagJoseFormat] } })
+      const ipfs = ipfsClient({url: API_URL, ipld: {formats: [format] }})  
 
       const jwe = (await ipfs.dag.get(payload.id)).value
       console.log(jwe)
@@ -238,7 +239,8 @@ export default new Vuex.Store({
       const idx = new IDX({ ceramic, aliases: definitions });
 
       //create a new instance of ipfs and insert the dag jose formats
-      const ipfs = await Ipfs.create({ ipld: { formats: [dagJoseFormat] } })
+      const ipfs = ipfsClient({url: API_URL, ipld: {formats: [format] }})  
+
       const recipients = [ceramic.did.id]
       const jwe = await ceramic.did.createDagJWE(payload.record, recipients)
       console.log(jwe)
@@ -289,7 +291,8 @@ export default new Vuex.Store({
       console.log("Ceramic DID Provider set");
 
       //create a new instance of ipfs and insert the dag jose formats
-      const ipfs = await Ipfs.create({ ipld: { formats: [dagJoseFormat] } })
+      const ipfs = ipfsClient({url: API_URL, ipld: {formats: [format] }})  
+
       const recipients = [payload.did]
       const jwe = await ceramic.did.createDagJWE(payload.record, recipients)
       console.log(jwe)

@@ -14,7 +14,6 @@ import web3Modal from "../utils/provider.js";
 
 import ipfsClient from 'ipfs-http-client'
 
-// import Ipfs from 'ipfs'
 import dagJose from 'dag-jose'
 import multiformats from 'multiformats/basics'
 import legacy from 'multiformats/legacy'
@@ -28,6 +27,7 @@ const DEFAULT_API_URL = "https://ceramic.asclepius.xyz";
 const API_URL = "https://ipfs.asclepius.xyz"
 const threeIdConnect = new ThreeIdConnect();
 const ceramic = new Ceramic(DEFAULT_API_URL);
+const ipfs = ipfsClient({url: API_URL, ipld: {formats: [format] }})  
 
 import createPersistedState from 'vuex-persistedstate'
 import * as Cookies from 'js-cookie'
@@ -209,8 +209,6 @@ export default new Vuex.Store({
       console.log("Ceramic DID Provider set");
 
       console.log('ID ' + payload.id)
-      //create a new instance of ipfs and insert the dag jose formats
-      const ipfs = ipfsClient({url: API_URL, ipld: {formats: [format] }})  
 
       const jwe = (await ipfs.dag.get(payload.id)).value
       console.log(jwe)
@@ -236,9 +234,6 @@ export default new Vuex.Store({
       await ceramic.setDIDProvider(provider);
       console.log("Ceramic DID Provider set");
       const idx = new IDX({ ceramic, aliases: definitions });
-
-      //create a new instance of ipfs and insert the dag jose formats
-      const ipfs = ipfsClient({url: API_URL, ipld: {formats: [format] }})  
 
       const recipients = [ceramic.did.id]
       const jwe = await ceramic.did.createDagJWE(payload.record, recipients)
@@ -288,9 +283,6 @@ export default new Vuex.Store({
 
       await ceramic.setDIDProvider(provider);
       console.log("Ceramic DID Provider set");
-
-      //create a new instance of ipfs and insert the dag jose formats
-      const ipfs = ipfsClient({url: API_URL, ipld: {formats: [format] }})  
 
       const recipients = [payload.did]
       const jwe = await ceramic.did.createDagJWE(payload.record, recipients)

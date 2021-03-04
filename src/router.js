@@ -7,6 +7,8 @@ import NewRecord from './views/NewRecord.vue'
 import Login from './views/Login.vue'
 import Profile from './views/Profile.vue'
 import EditProfile from './views/EditProfile.vue'
+import NotFound from './views/NotFound.vue'
+
 
 Vue.use(VueRouter)
 
@@ -26,25 +28,31 @@ const routes = [
       default: Login
     },
   },
-  
+
   {
     path: '/content/:id',
     name: 'Display',
-    components: {default: Display, header: AppHeader}
+    components: { default: Display, header: AppHeader }
   },
   {
     path: '/profile',
     name: 'Profile',
-    components: {default: Profile, header: AppHeader}
+    components: { default: Profile, header: AppHeader }
   }, {
     path: '/editprofile',
     name: 'EditProfile',
-    components: {default: EditProfile, header: AppHeader}
+    components: { default: EditProfile, header: AppHeader }
   },
   {
     path: '/new',
     name: 'New',
-    components: {default: NewRecord, header: AppHeader}
+    components: { default: NewRecord, header: AppHeader }
+  },
+  {
+    path: '*',
+    components: {
+      default: NotFound
+    }
   }
 ]
 

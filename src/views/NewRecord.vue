@@ -309,11 +309,13 @@ export default {
     async newRecord() {
       let record2 = this.record;
       console.log(record2);
+      let loading = this.$vs.loading();
       await this.$store.dispatch("encryptStore", { record: record2 });
       let route = this.$router.resolve({ path: "/home" });
       setTimeout(() => {
         window.open(route.href, "_self");
       }, 3000);
+      loading.close();
     },
   },
 };

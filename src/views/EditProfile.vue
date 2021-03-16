@@ -321,6 +321,7 @@ export default {
       }, 1500)
     },
     async updateProfile(){
+      let loading = this.$vs.loading();
       let profile = this.profile;
       let selectedImage = this.selectedImage
       let imageHeight = this.imageHeight
@@ -333,6 +334,7 @@ export default {
       setTimeout(() => {
         window.open(route.href, "_self");
       }, 3000);
+      loading.close();
     }
   },
   computed: {},

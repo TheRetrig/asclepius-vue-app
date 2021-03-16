@@ -23,11 +23,11 @@ import socket from '../utils/socket'
 multiformats.multicodec.add(dagJose)
 const format = legacy(multiformats, dagJose.name)
 
-const DEFAULT_API_URL = "https://ceramic.asclepius.xyz";
+const DEFAULT_API_URL = "https://ceramic-clay.3boxlabs.com";
 const API_URL = "https://ipfs.asclepius.xyz"
 const threeIdConnect = new ThreeIdConnect();
 const ceramic = new Ceramic(DEFAULT_API_URL);
-const ipfs = ipfsClient({url: API_URL, ipld: {formats: [format] }})  
+const ipfs = ipfsClient({ url: API_URL, ipld: { formats: [format] } })
 
 import createPersistedState from 'vuex-persistedstate'
 import * as Cookies from 'js-cookie'
@@ -84,20 +84,25 @@ export default new Vuex.Store({
       state.ethaddress = payload.ethaddress;
       localStorage.setItem('ethaddress', payload.ethaddress);
 
-      state.profile = payload.profile;
-      let url = "https://ipfs.io/ipfs/";
-      let cid = payload.profile.image.original.src.slice(7)
-      state.profilePic = url +cid;
-      localStorage.setItem('profilePic', state.profilePic);
-      localStorage.setItem('basicProfile', JSON.stringify(payload.profile));
+      if (payload.profile != null) {
+        state.profile = payload.profile;
+        let url = "https://ipfs.io/ipfs/";
+        let cid = payload.profile.image.original.src.slice(7)
+        state.profilePic = url + cid;
+        localStorage.setItem('profilePic', state.profilePic);
+        localStorage.setItem('basicProfile', JSON.stringify(payload.profile));
+      }
 
       state.did = payload.did;
       localStorage.setItem('did', payload.did);
+      console.log('Mutation set')
 
-      state.recordsList = payload.recordList.records;
-      localStorage.setItem('recordsList', JSON.stringify(payload.recordList.records));
+      if (payload.recordList != null) {
+        state.recordsList = payload.recordList.records;
+        localStorage.setItem('recordsList', JSON.stringify(payload.recordList.records));
+      }
 
-      state.authenticated = payload.idx.authenticated;
+      state.authenticated = true;
       localStorage.setItem('authenticated', true);
 
       console.log('mutation executed and state stored');
@@ -110,7 +115,7 @@ export default new Vuex.Store({
       state.profile = payload.profile;
       let url = "https://ipfs.io/ipfs/";
       let cid = payload.profile.image.original.src.slice(7)
-      state.profilePic = url +cid;
+      state.profilePic = url + cid;
       localStorage.setItem('profilePic', state.profilePic);
       localStorage.setItem('basicProfile', JSON.stringify(payload.profile));
     },
@@ -154,6 +159,7 @@ export default new Vuex.Store({
 
       await ceramic.setDIDProvider(provider);
       console.log("Ceramic DID Provider set");
+      console.log(ceramic.did.id);
 
       socket.auth = { did: ceramic.did.id };
       socket.connect();
@@ -179,15 +185,13 @@ export default new Vuex.Store({
         console.dir(profile)
         let payload = {
           ethaddress,
-          idx,
           recordList,
           did: ceramic.did.id,
-          ceramic,
           profile
         }
-        await setTimeout(() => {
-          commit('auth', payload)
-        }, 4000)
+        setTimeout(() => {
+          commit('auth', payload);
+        }, 1000)
         return true;
       } else {
         return false;
